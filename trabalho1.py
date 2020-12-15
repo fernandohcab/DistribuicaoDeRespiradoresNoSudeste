@@ -76,7 +76,7 @@ if __name__ == "__main__":
     print("Para analisar o número de respiradores por Estado, digite 1")
     print("Para analisar a quantidade de respiradores recebidos, digite 2")
     print("Para analisar o custo de cada entrega de respiradores, digite 3")
-    print("Para analisar a data de entregas para cada Estado, digite 4")
+    print("Para analisar o tipo de destino para cada Estado, digite 4")
 
     print("Para sair, aperte 0")
     n = 1
@@ -97,19 +97,24 @@ if __name__ == "__main__":
                 for i in linhas:
                     if(i[0].lower().rstrip() == "são paulo"):
                         lista.append(i[0])
+                        SP.append(i)
 
             elif(op == 2):
                 for i in linhas:
                     if(i[0].lower().rstrip() == "rio de janeiro"):
                         lista.append(i[0])
+                        RJ.append(i)
+
             elif(op == 3):
                 for i in linhas:
                     if(i[0].lower().rstrip() == "minas gerais"):
                         lista.append(i[0])
+                        MG.append(i)
             elif(op == 4):
                 for i in linhas:
                     if(i[0].lower().rstrip() == "espirito santo"):
                         lista.append(i[0])
+                        ES.append()
             elif(op == 5):
                 for i in linhas:
                     lista.append(i[0])
