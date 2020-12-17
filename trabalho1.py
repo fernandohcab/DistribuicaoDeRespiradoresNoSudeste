@@ -1,5 +1,6 @@
 import csv
 import locale
+from matplotlib import pyplot as plt
 
 # O(n²)
 def selectionSort(lista):
@@ -26,36 +27,24 @@ def shellSort(lista):
         dist = dist // 2
 
 # O(n)
-def countingSort(arr, exp1):
-    n = len(arr)
-    output = [0] * (n)
-    count = [0] * (10)
+def bucketSort(lista):
+    bucket = []
 
-    for i in range(0, n):
-        index = (arr[i]/exp1)
-        count[int((index)%10)] += 1
+    for i in range(len(lista)):
+        bucket.append([])
 
-    for i in range(1,10):
-        count[i] += count[i-1]
+    for j in lista:
+        index_b = int(j)
+        bucket[index_b].append(j)
 
-    i = n-1
-    while i>=0:
-        index = (arr[i]/exp1)
-        output[ count[ int((index)%10) ] - 1] = arr[i]
-        count[int((index)%10)] -= 1
-        i -= 1
+    for i in range(len(lista)):
+        bucket[i] = sorted(bucket[i])
 
-    i = 0
-    for i in range(0,len(arr)):
-        arr[i] = output[i]
-
-def radixSort(arr):
-    max1 = max(arr)
-
-    exp = 1
-    while max1/exp > 0:
-        countingSort(arr,exp)
-        exp *= 10
+    k = 0
+    for i in range(len(lista)):
+        for j in range(len(bucket[i])):
+            lista[k] = bucket[i][j]
+            k += 1
 
 def totalRespiradores(lista, op):
     if(op == 1):
@@ -140,11 +129,17 @@ if __name__ == "__main__":
     print("Para analisar qual o gasto total, digite 3")
     print("Para analisar o tipo de destino para cada Estado, digite 4")
 
-    n = int(input("Digite a opção: "))
-
+    try:
+        n = int(input("Digite a opção: "))
+    except:
+        print("Digite apenas números inteiros. Saindo...")
+        exit()
     while(n <= 0 or n > 4):
         print("\nOpção inválida. Digite uma das opções disponíveis\n")
-        n = int(input("Digite a opção: "))
+        try:
+            n = int(input("Digite a opção: "))
+        except:
+            print("Digite apenas números inteiros")
 
     if(n == 1):
         print("\nQual Estado deseja analisar? \n (1) - São Paulo \n (2) - Rio de Janeiro \n (3) - Minas Gerais \n (4) - Espírito Santo \n (5) - Todos\n")
@@ -152,7 +147,10 @@ if __name__ == "__main__":
 
         while(op <= 0 or op > 5):
             print("\nOpção inválida. Digite uma das opções disponíveis\n")
-            op = int(input("Digite a opção: "))
+            try:
+                op = int(input("Digite a opção: "))
+            except:
+                print("Digite apenas números inteiros")
 
         if(op == 1):
             for i in linhas:
@@ -222,8 +220,8 @@ if __name__ == "__main__":
                 elif(i[0].lower().rstrip() == "espirito santo"):
                     es += 1
                 lista.append(int(i[1]))
-
-        print("\nQual algoritmo deseja utilizar? \n (1) - Selection Sort \n (2) - Shell Sort \n (3) - Radix Sort\n")
+        arquivo.close()
+        print("\nQual algoritmo deseja utilizar? \n (1) - Selection Sort \n (2) - Shell Sort \n (3) - Bucket Sort\n")
         k = int(input("Digite a opção: "))
 
         while(k <= 0 or k > 3):
@@ -237,7 +235,7 @@ if __name__ == "__main__":
             shellSort(lista)
 
         elif(k == 3):
-            radixSort(lista)
+            bucketSort(lista)
 
         soma = 0
         for i in lista:
@@ -258,6 +256,24 @@ if __name__ == "__main__":
             print(f"O menor número de respiradores recebidos de uma única vez foi {lista[0]}")
             print(f"O estado que mais recebeu respiradores foi Minas Gerais, com {mg} unidades")
             print("========================================\n")
+
+        arquivo = open('distribuicao_respiradores.csv')
+        linhas = csv.reader(arquivo)
+
+        datas = []
+        num = 0
+        for i in linhas:
+            if(num == len(lista)):
+                break
+            datas.append(i[4][0:5])
+            num += 1
+        arquivo.close()
+
+        fig, ax1 = plt.subplots(1, figsize=(30,5))
+        ax1.bar(datas,lista,color='#00BFFF')
+        ax1.set(title="Distribuição conforme o tempo", xlabel="Datas", ylabel="Quantidade")
+
+        plt.show()
     elif(n == 3):
 
         print("\nQual Estado deseja analisar? \n (1) - São Paulo \n (2) - Rio de Janeiro \n (3) - Minas Gerais \n (4) - Espírito Santo \n (5) - Todos\n")
